@@ -23,3 +23,4 @@ module_exit(hello_world_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Aditya Akhileshwaran");
+MODULE_DESCRIPTION("Linux kernel module that prints 'Hello World' and 'Goodbye!'");

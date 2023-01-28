@@ -1,3 +1,12 @@
+# About
+Creates a kernel module that prints "Hello World" when you insert the module into the kernel, and prints "Goodbye!" when you remove it
+
+# Getting Started
+
+## Navigating the Repository
+
+There are two files present in this repository:
+
 1. First download img VM image
 2. Then download script practice.sh, and ensure both of them are in the same directory
 3. Rename it to run-vm.sh
