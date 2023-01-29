@@ -1,0 +1,77 @@
+EPerf Summary
+ 
+1. Background
+Programmers today have a variety of tools for performance debugging which allows developers to get fine-grained information about time and resources occupied by their
+programs. However, developers do not have tools that provide similar analysis for power and energy of programs. Existing solutions all have the shortcomings of only being
+able to provide coarse-grained or millisecond scale measurements, when application events of interest to a programmer occur at a nanosecond level. For instance, power
+monitors provide readings using electric meters when placed on the power cable that give information about how much power the entire machine is drawing, but do not
+provide the granularity required to track energy consumption at an application level. Moreover, the idea tried by Conteras et. Al in 2005 for the Intel PXA255
+processor have become outdated due to the advanced technology of modern chips.
+
+2. Idea
+EPerf provides developers a tool designed to infer energy consumption of an application down to the subroutine level. The key idea is to use micro-architectural
+events such as the number of cache and TLB misses to predict the energy consumption of applications. EPerf then uses linear optimization to build a linear model that
+predicts the energy consumption of an application given these micro-architectural information.
+
+EPerf first requires identifying the relationship between the frequency of these events occurring in a program and the energy consumption of that program. This is
+particularly difficult because, as stated above, existing processor level interfaces operate at millisecond granularity, and that energy used by each event is architecture
+specific.
+
+In its methodology, EPerf uses RAPL, Running Average Power Limit, that is an Intel feature that enables users to monitor the power consumption of a processor. It also
+allows capping the power consumption of different components of the processor. RAPL is currently exposed by Intel as a model specific register (MSR). RAPL has its own
+limitations such as not being able to measure power on a per-core or per-hyperthread basis, having a max sampling size of 1000 updates per section and hence does not
+provide insight as to why power consumption changed, as well as users having to read inconsistent values due to RAPL counters not being updates atomically.
+
+EPerf also use Micro-architectural Performance Counters (MPC) to keep track of various hardware events on different parts of the processor. These are integral for
+developers to get very fine grained information about events such as the total number of instructions executed, the number of stalls incurred, number of cache misses,
+TLB misses, number of branch misses, and the number of memory accesses. However, these counters currently do not measure energy or power consumption.
+
+
+3. Methodology
+
+Step 1:
+MSRs are directly read using the privileged rdmsr instruction to get access to RAPL counters. The counters are multiplied with  processor specific RAPL units to
+convert them into joules. EPerf implements detailed procedures to tackle RAPL’s shortcomings and ensure correct energy readings, including using gasket to pin the
+measured process to a specific core, reading consistent data from RAPL and not the oversampled ones, etc.
+
+Step 2:
+To record the counters, EPerf use Linux perf, a performance analyzing tool in Linux that can profile the entire system, including kernel code, and virtualizes counters
+to each process with minimal overhead. Perf also provides a function level analysis of the profiled application. EPerf acknowledges perf’s overhead of about 500 cycles
+per counter read, resulting in a total overhead of 4000 cycles per sample. Perf records 8 performance events as input to the model: number of instructions retired,
+number of stalls, L1 instruction and data cache misses, L2 and last level cache misses, and instruction and data TLB misses.
+
+
+Step 3:
+Benchmarks 500-657 of SPEC 2017 and GAPbs are used to build the model., that are written to use different parts of the processor and memory system. After receiving
+the energy and performance counter readings for the benchmarks used to build the model, CVXPY, a convex optimization solver, is used to create a linear model to minimize
+the relative error between the actual readings and the predicted value.
+
+For the set of all benchmarks by B, and the set of performance counter inputs as C, the model minimizes the below equation:
+
+Sum of all j in B (Sum of all c in C (((c_j * w_c) - e_j) / e_j)) ^ 2
+￼
+
+Step 4:
+In its current version, Perf exist as an open source tool to provide an overall estimate of the amount of energy an application consumes. The current implementation
+provides a command line interface which takes the application that needs to be measured as the input and uses linux perf to get the performance counter information of
+the application.
+
+Evaluation:
+The evaluation is performed using two different processors, Intel® Xeon® Processor E5-2680 v3 (Skylake), a single socket, twelve cores per socket and two hyperthreads per
+core and the Intel® Xeon® Gold 6138 (Haswell) processor with two sockets, twenty cores per socket and two hyperthreads per core.
+
+The energy prediction error is between 1.2% to 14% with a mean error of about 6% on a single socket server and with an error rate of 3.7% to 31.6% with a mean error of
+19% when used on a double socket machine.
+ 
+
+
+ 
+ 
+ 
+How to reduce energy? This is saying only measure? Do programmers do it on their own etc?
+ 
+ 
+Future work,
+Show that is can be used somewhere. Greenhouse gas emmissions reduction etc.
+
+Try improving he equation to provide a better evaluation and thus smaller difference between the error percentage ranges
