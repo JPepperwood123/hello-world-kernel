@@ -90,4 +90,6 @@ of future directions that I believe EPerf can potentially be taken.
 Energy Efficiency could just be defined as the Useful Work Done	/ Used Energy. Despite the provided equation being extremely simplified, I believe EPerf can potentially
 be taken along this path to help users analyze which parts of the application is using energy much more efficiently than others, also allowing them to debug easier.
 
-2. EPerf could also be utilized 
+2. EPerf could also be utilized in analyzing and minimizing frequently occurring problems found. For example, EPerf could analyze that a specific application has too
+much unnecessary data movement, unnecessary memory access leaks, or using only single-threaded applications and recommends, or possibly helps solve, these challenges
+by minimizing data movements, memory accesses, or recommending multithreading respectively.
