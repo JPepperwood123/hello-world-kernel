@@ -5,10 +5,11 @@ Creates a kernel module that prints "Hello World" when you insert the module int
 
 ## Navigating the Repository
 
-There are three files present in this repository:
+There are four files present in this repository:
 
 1. `PART-1.txt` : A file with the summary, shortcomings, and future directions for Part 1 of the assignment
 2. `hello-world.c` : The source code for your module
+3. `Makefile` : The source code for compiling the code written for the module
 3. `README.md` : This file consisting of instructions to run my module and test that it works correctly on the VM provided. It also provides a list of all the bugs I encountered below.
 
 
@@ -165,7 +166,13 @@ This command is a shortcut for printing the kernel’s logs to the screen. You s
 This time we can see “Goodbye!” logged there.
 
 
-Bugs Encountered: 
-1. Entire thing with setup
-2. Makefile:4: *** missing separator.
-3. dmesg problem
+# BUGS ENCOUNTERED: 
+1. I ran the most problems with the setup. The downloading portion seemed to work easily, even if it took a bit of time. Then, as per recommendation, I used scp to put the downlaoded VM img and script onto attu. However, attu did not work for me as I could not find any way to download `qemu`. There was no way to get
+the root password for attu so I could not download sudo in order to download qemu. However, on researching
+qemu, I realized it worked as well as it could with Mac and re-ran the script after downloading qemu from
+`brew` which worked really well and gave me the desired output.
+
+2. The second problem was actually understanding the "print" portion of the question. I looked for various ways to print the messages onto the Terminal screen, but encountered docs which stated that all messages
+using `pr_info()` or `printk(KERN_INFO "Message")` were "printed" onto the kernel log buffer, a ring buffer exported to userspace through /dev/kmsg. The usual way to read it, as stated above, is using `dmesg`.
+
+The closest way to print it in the terminal was using `/proc`. However, this required creating the module's custom readline() function that can be called by creating a Python code in a script, which can be printed after opening the driver and calling readline() on the opened module. However, the printing did not happen with consequence to inserting the module, and was hence not chosen to be submitted by me.
