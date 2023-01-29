@@ -1,4 +1,4 @@
-EPerf Summary
+EPerf SUMMARY
  
 1. Background
 Programmers today have a variety of tools for performance debugging which allows developers to get fine-grained information about time and resources occupied by their
@@ -65,13 +65,29 @@ The energy prediction error is between 1.2% to 14% with a mean error of about 6%
  
 
 
- 
- 
- 
-How to reduce energy? This is saying only measure? Do programmers do it on their own etc?
- 
- 
-Future work,
-Show that is can be used somewhere. Greenhouse gas emmissions reduction etc.
+EPerf SHORTCOMINGS
 
-Try improving he equation to provide a better evaluation and thus smaller difference between the error percentage ranges
+I found EPerf to be a great open source tool that provides relevant information about an applications micro-architecturial behavior with respect to energy consumed.
+However, there were few shortcomings which I felt that were present in this project which, when tackled, could make it a better source.
+
+1. The first shortcoming I found was the procedure after finding out the energy performance after running this algorithm seems incomplete. In already described
+performance debugging tools that provide information regarding time and resources, whether for lower runtime analysis or an AI tool that writes the code based on
+the provided description, these tools can be used pretty simply after they finish their analysis. Supposing EPerf's analysis shows that the current application uses
+an abnormally high energy in some aspect, it does not provide enough description or suggestions on how to attempt to solve it nor can it attempt to do so on its own.
+
+2. Secondly, this tool would be much more popular if its evaluation also includes how much of the 1-2% of worldwide electricity consumption by data centers
+could be reduced after the introduction of Eperf. Testing it in current applications and getting proper quantitative results that it helps reduce wastage of electricity
+would make EPerf an extremely desirable tool.
+
+
+
+EPerf FUTURE DIRECTIONS 
+
+Apart from tackling the shortcomings that I believe EPerf has right now, such as showing its predicted impact on the carbon footprint of the world, there are a couple
+of future directions that I believe EPerf can potentially be taken.
+
+1. Firstly, I believe that we could help redesign the algorithm a little bit to incorporate energy efficiency rather than purely energy consumption. In this context,
+Energy Efficiency could just be defined as the Useful Work Done	/ Used Energy. Despite the provided equation being extremely simplified, I believe EPerf can potentially
+be taken along this path to help users analyze which parts of the application is using energy much more efficiently than others, also allowing them to debug easier.
+
+2. EPerf could also be utilized 
